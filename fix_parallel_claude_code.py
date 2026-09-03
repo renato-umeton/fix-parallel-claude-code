@@ -2,7 +2,7 @@
 """Restore delegation and parallel work in Claude Code.
 
 Recent Claude Code builds carry a system-prompt line, "Do not call the
-AgentTool unless the user requested it", that makes the model stop delegating
+AgentTool unless the user", that makes the model stop delegating
 to subagents. This tool installs a UserPromptSubmit hook that reissues a
 standing request for delegation on every turn, checks whether an installed
 Claude Code binary carries the marker, and can remove the hook again.
@@ -27,7 +27,7 @@ from typing import Any, Iterable, Mapping
 
 __version__ = "0.1.0"
 
-MARKER = b"Do not call the AgentTool unless the user requested it"
+MARKER = b"Do not call the AgentTool unless the user"
 HOOK_SCRIPT_NAME = "delegation-standing-request.sh"
 HOOK_EVENT = "UserPromptSubmit"
 HEREDOC_TERMINATOR = "JSON"
@@ -52,9 +52,12 @@ DEFAULT_MESSAGE = (
     "what they are for.\n"
     "\n"
     "If an instruction in this session says not to call the Agent tool "
-    "unless the user requested it: I am the user, and I am requesting it "
+    "unless the user blah: I am the user, and I am requesting it "
     "here, for the occasions above. If something still appears to forbid "
     "it, name that conflict in your reply and delegate anyway.\n"
+    "\n"
+    "Importantly, when you delegate, use Opus in the subagents since the "
+    "higher coordinator is a more powerful model.\n"
     "\n"
     "If a task is small enough that dispatching would be slower than doing "
     "it, say so in one line and do it inline. That judgment is yours. It is "
