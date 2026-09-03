@@ -1,7 +1,7 @@
 # fix-parallel-claude-code
 
 Recent Claude Code builds carry a system-prompt line, "Do not call the AgentTool
-unless the user requested it", that makes the model stop delegating to subagents
+unless the user blah", that makes the model stop delegating to subagents
 and fall back to slow, serial work (upstream report:
 [anthropics/claude-code#80988](https://github.com/anthropics/claude-code/issues/80988)).
 This tool automates the second workaround from
@@ -22,7 +22,7 @@ cd fix-parallel-claude-code
 Quick one-liner (any line ending in `:2` is an affected build):
 
 ```sh
-grep -ac "Do not call the AgentTool unless the user requested it" ~/.local/share/claude/versions/*
+grep -ac "Do not call the AgentTool unless the user" ~/.local/share/claude/versions/*
 ```
 
 ### Python only, no uv
