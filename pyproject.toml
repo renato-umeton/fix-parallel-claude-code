@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fix-parallel-claude-code"
+version = "0.1.0"
+description = "Restore delegation and parallel work in Claude Code with a UserPromptSubmit hook"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Renato Umeton" }]
+keywords = ["claude-code", "hooks", "agents"]
+classifiers = [
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.urls]
+Homepage = "https://github.com/renato-umeton/fix-parallel-claude-code"
+Issues = "https://github.com/renato-umeton/fix-parallel-claude-code/issues"
+
+[project.scripts]
+fix-parallel-claude-code = "fix_parallel_claude_code:main"
+
+[tool.setuptools]
+py-modules = ["fix_parallel_claude_code"]
