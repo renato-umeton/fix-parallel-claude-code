@@ -10,6 +10,13 @@ a `UserPromptSubmit` hook that reissues, on every turn, a standing request for
 delegation on specific classes of work. No binary patching, no dependencies,
 one Python file.
 
+## Clone
+
+```sh
+git clone https://github.com/renato-umeton/fix-parallel-claude-code.git
+cd fix-parallel-claude-code
+```
+
 ## Check if you are affected
 
 Quick one-liner (any line ending in `:2` is an affected build):
@@ -18,40 +25,30 @@ Quick one-liner (any line ending in `:2` is an affected build):
 grep -ac "Do not call the AgentTool unless the user requested it" ~/.local/share/claude/versions/*
 ```
 
-Or let the tool scan the usual locations plus whatever `claude` on your PATH points to:
+### Python only, no uv
 
-```sh
-uvx --from git+https://github.com/renato-umeton/fix-parallel-claude-code fix-parallel-claude-code check
-```
+Use the script directly with Python 3.10+ and the standard library only.
 
-Pass `check --versions-dir DIR` if your versions live elsewhere. Exit codes:
-0 clean, 1 at least one version affected, 2 nothing scanned. An absent marker
-may also mean the wording changed in that build; the hook is harmless either way.
-
-## Install
-
-```sh
-uvx --from git+https://github.com/renato-umeton/fix-parallel-claude-code fix-parallel-claude-code install
-```
-
-Without `uv`, clone the repo and run the file directly (Python 3.10+, stdlib only):
+#### Install
 
 ```sh
 python3 fix_parallel_claude_code.py install
 ```
 
-Install flags: `--dry-run`, `--message-file PATH` (your own standing-request
-text), `--force` (overwrite a differing script). `--claude-dir DIR` is a global
-option and must come before the subcommand (`CLAUDE_CONFIG_DIR` works too):
+#### Check
 
 ```sh
-fix-parallel-claude-code --claude-dir DIR install --dry-run
+python3 fix_parallel_claude_code.py check
 ```
 
-## Verify
+Pass `--versions-dir DIR` if your versions live elsewhere. Exit codes:
+0 clean, 1 at least one version affected, 2 nothing scanned. An absent marker
+may also mean the wording changed in that build; the hook is harmless either way.
+
+#### Verify
 
 ```sh
-fix-parallel-claude-code status
+python3 fix_parallel_claude_code.py status
 ```
 
 Then restart Claude Code and ask it:
@@ -62,14 +59,65 @@ Good answer: it will delegate by default for the categories in the standing
 request. Bad answer: it will do everything directly because the instructions
 forbid the Agent tool.
 
-## Uninstall
+#### Uninstall
 
 ```sh
-fix-parallel-claude-code uninstall
+python3 fix_parallel_claude_code.py uninstall
 ```
 
 Removes only the hook entry this tool added and deletes the script. Other hooks
 and settings are left untouched.
+
+### With uv
+
+#### Install
+
+```sh
+uvx --from git+https://github.com/renato-umeton/fix-parallel-claude-code fix-parallel-claude-code install
+```
+
+#### Check
+
+```sh
+uvx --from git+https://github.com/renato-umeton/fix-parallel-claude-code fix-parallel-claude-code check
+```
+
+Pass `check --versions-dir DIR` if your versions live elsewhere. Exit codes:
+0 clean, 1 at least one version affected, 2 nothing scanned. An absent marker
+may also mean the wording changed in that build; the hook is harmless either way.
+
+#### Verify
+
+```sh
+uvx --from git+https://github.com/renato-umeton/fix-parallel-claude-code fix-parallel-claude-code status
+```
+
+Then restart Claude Code and ask it:
+
+> by default, when I ask anything, will you use AgentTool or not?
+
+Good answer: it will delegate by default for the categories in the standing
+request. Bad answer: it will do everything directly because the instructions
+forbid the Agent tool.
+
+#### Uninstall
+
+```sh
+uvx --from git+https://github.com/renato-umeton/fix-parallel-claude-code fix-parallel-claude-code uninstall
+```
+
+Removes only the hook entry this tool added and deletes the script. Other hooks
+and settings are left untouched.
+
+## Install flags
+
+`--dry-run`, `--message-file PATH` (your own standing-request text), `--force`
+(overwrite a differing script). `--claude-dir DIR` is a global option and must
+come before the subcommand (`CLAUDE_CONFIG_DIR` works too):
+
+```sh
+fix-parallel-claude-code --claude-dir DIR install --dry-run
+```
 
 ## What it changes
 
